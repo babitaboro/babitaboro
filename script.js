@@ -1,5 +1,5 @@
 const CONFIG = {
-    // UPDATED: Points directly to your GitHub data
+    // UPDATED: Points directly to your raw JSON data on GitHub
     db: "https://raw.githubusercontent.com/babitaboro/babitaboro/main/bodo_dictionary.json"
 };
 
@@ -13,14 +13,14 @@ async function init() {
     status.textContent = "🔄 Syncing Bodo Dictionary from GitHub...";
 
     try {
-        // Fetch using the GitHub Raw URL with a timestamp to prevent caching
+        // We add '?t=' + time to force the browser to get the newest version of your file
         const response = await fetch(CONFIG.db + '?t=' + new Date().getTime());
         
-        if (!response.ok) throw new Error("GitHub file not accessible");
+        if (!response.ok) throw new Error("GitHub file not found");
 
         const data = await response.json();
         
-        // Map the specific JSON keys from your 'Book2' conversion
+        // Map the JSON keys (handles both 'English Word' from Excel and 'english' from JSON)
         dictionaryData = data.map(item => ({
             english: item["English Word"] || item.english,
             translation: item["Bodo Meaning"] || item.translation,
@@ -28,7 +28,7 @@ async function init() {
             extra: item["Transliteration"] || item.extra
         }));
 
-        // Grouping logic for words with multiple meanings
+        // Grouping logic (handles multiple meanings for one word)
         groupedDictionaryData = {};
         dictionaryData.forEach(item => {
             const key = item.english;
@@ -38,7 +38,7 @@ async function init() {
 
         status.textContent = `✅ Loaded ${dictionaryData.length} Bodo words!`;
     } catch (e) {
-        status.textContent = "⚠️ Sync Error. Check your internet or GitHub link.";
+        status.textContent = "⚠️ Sync Error. Please check your connection.";
         console.error("Fetch error:", e);
     }
 }
@@ -47,6 +47,7 @@ async function init() {
 function filterData(query) {
     const q = query.toLowerCase().trim();
     const container = document.getElementById('bookTableContainer');
+    
     if (!q) { 
         if (container) container.style.display = 'none'; 
         return; 
@@ -65,7 +66,7 @@ function renderTable(matchingKeys) {
     const container = document.getElementById('bookTableContainer');
     const tbody = document.getElementById('bookTableBody');
     if (!tbody) return;
-    
+
     tbody.innerHTML = ''; 
     lastFilterResults = matchingKeys;
 
@@ -90,20 +91,19 @@ function renderTable(matchingKeys) {
 }
 
 function showDetails(word) {
-    // Hide search results to show full meaning card
     document.getElementById('bookTableContainer').style.display = 'none';
     const entries = groupedDictionaryData[word];
     let html = '';
     
     entries.forEach(e => {
         html += `
-            <div class="meaning-row" style="margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
-                <p style="font-size: 1.4rem; color: #2563eb; font-weight: 800; margin: 0;">
+            <div class="meaning-row" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                <p style="font-size: 1.4rem; color: var(--primary-color); font-weight: 800; margin: 0;">
                     ${e.translation}
-                    <button onclick="navigator.clipboard.writeText('${e.translation}')" style="cursor:pointer; background:none; border:none;">📋</button>
+                    <button onclick="navigator.clipboard.writeText('${e.translation}')" class="copy-btn-mini">📋</button>
                 </p>
                 ${e.extra ? `<p style="color: #64748b; font-size: 0.9rem; margin: 5px 0;"><em>${e.extra}</em></p>` : ''}
-                ${e.explanation ? `<div style="background: #f1f5f9; padding: 10px; border-radius: 8px; border-left: 4px solid #2563eb; margin-top: 10px;">${e.explanation}</div>` : ''}
+                ${e.explanation ? `<div class="explanation-box" style="background: rgba(0,0,0,0.03); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-top: 10px;">${e.explanation}</div>` : ''}
             </div>`;
     });
     
@@ -113,11 +113,23 @@ function showDetails(word) {
 }
 
 // --- EVENT LISTENERS ---
-document.getElementById('searchInput').oninput = (e) => filterData(e.target.value);
-document.getElementById('backButton').onclick = () => {
-    document.getElementById('descriptionArea').style.display = 'none';
-    renderTable(lastFilterResults);
-};
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.oninput = (e) => filterData(e.target.value);
+}
+
+const backButton = document.getElementById('backButton');
+if (backButton) {
+    backButton.onclick = () => {
+        document.getElementById('descriptionArea').style.display = 'none';
+        renderTable(lastFilterResults);
+    };
+}
+
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.onclick = () => document.body.classList.toggle('dark-theme');
+}
 
 // Start the app
 init();
