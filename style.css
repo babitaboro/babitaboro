@@ -1,250 +1,29 @@
-/* --- MODERN BODO DICTIONARY STYLES --- */
-:root {
-    --primary: #2563eb;        /* Main Accent Blue */
-    --bg: #f8fafc;             /* Light Gray Background */
-    --card: #ffffff;           /* White Surface */
-    --text-main: #1e293b;      /* Dark Text */
-    --text-muted: #64748b;     /* Gray Text for Secondary Info */
-    --border: #e2e8f0;         /* Light Border */
-    --accent: #f1f5f9;         /* Very Light Accent */
-    --success: #22c55e;
-}
-
-/* Dark Mode Variables */
-body.dark-theme {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --border: #334155;
-    --accent: #0f172a;
-}
-
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Fixes mobile tap highlight */
-}
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: var(--bg);
-    color: var(--text-main);
-    margin: 0;
-    padding: 0;
-    transition: background 0.3s ease;
-}
-
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-/* --- HEADER & SEARCH --- */
-header {
-    position: sticky;
-    top: 0;
-    background: var(--bg);
-    padding: 10px 0 20px 0;
-    z-index: 1000;
-}
-
-h1 {
-    font-size: 1.75rem;
+/* Bold Styling */
+#bookTable td strong {
     font-weight: 800;
-    text-align: center;
-    color: var(--primary);
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
+    color: var(--primary-color, #2563eb);
 }
 
-#searchInput {
-    width: 100%;
-    padding: 18px 24px;
-    font-size: 1.1rem;
-    border-radius: 20px;
-    border: 2px solid var(--border);
-    background: var(--card);
-    color: var(--text-main);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-#searchInput:focus {
-    border-color: var(--primary);
-    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.15);
-}
-
-/* --- ACTION BUTTONS --- */
-.btn-group {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.theme-button {
-    padding: 10px 16px;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--text-main);
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.theme-button:hover {
-    background: var(--accent);
-}
-
-.admin-btn {
-    background: #fef3c7;
-    color: #92400e;
-    border: none;
-}
-
-.status-info {
-    text-align: center;
+/* Small Font for Explanation */
+.small-explanation {
     font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-/* --- SEARCH RESULTS LIST --- */
-#bookTableContainer {
-    margin-top: 10px;
-}
-
-#bookTable {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 12px; /* Space between "cards" */
-}
-
-#bookTable tr {
-    background: var(--card);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-#bookTable tr:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-}
-
-#bookTable td {
-    padding: 20px;
-    border: 1px solid var(--border);
-}
-
-#bookTable td:first-child {
-    border-radius: 16px 0 0 16px;
-    border-right: none;
-}
-
-#bookTable td:last-child {
-    border-radius: 0 16px 16px 0;
-    border-left: none;
-}
-
-.word-primary {
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: var(--primary);
+    color: #666;
+    line-height: 1.4;
+    margin-top: 8px;
     display: block;
 }
 
-.word-muted {
-    font-size: 0.95rem;
-    color: var(--text-muted);
-}
-
-/* --- DETAIL MEANING CARD --- */
-.description-box {
-    background: var(--card);
-    padding: 25px;
-    border-radius: 24px;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-#descriptionTitle {
-    font-size: 1.8rem;
-    margin-top: 0;
-    margin-bottom: 20px;
-    border-bottom: 2px solid var(--accent);
-    padding-bottom: 10px;
-}
-
-.meaning-row {
-    margin-bottom: 25px;
-}
-
-.bodo-text {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--primary);
-    line-height: 1.2;
-}
-
-.translit-tag {
-    display: inline-block;
-    background: var(--accent);
-    color: var(--text-muted);
-    padding: 4px 12px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    margin: 8px 0;
-}
-
-.explanation-box {
-    font-size: 1rem;
-    color: var(--text-main);
-    background: rgba(0,0,0,0.02);
+/* Card layout for details */
+.meaning-card {
     padding: 15px;
-    border-radius: 12px;
-    border-left: 4px solid var(--primary);
-    margin-top: 10px;
-}
-
-.action-btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.copy-btn {
-    background: none;
-    border: 1px solid var(--border);
-    padding: 5px 8px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
-/* Admin Input Styles */
-#adminPanel input, #adminPanel textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    border: 1px solid var(--border);
+    background: #fff;
     border-radius: 10px;
-    background: var(--accent);
-    color: var(--text-main);
+    margin-bottom: 10px;
+    border-left: 4px solid #2563eb;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+body.dark-theme .meaning-card {
+    background: #1e293b;
+    color: #f1f5f9;
 }
