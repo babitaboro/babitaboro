@@ -1,6 +1,6 @@
 const CONFIG = {
-    // Relative path to your JSON file in the GitHub repo
-    db: "bodo_dictionary.json"
+    db: "bodo_dictionary.json", // Ensure this file is in the same folder
+    api: "https://script.google.com/macros/s/AKfycbxPo_6gATFfSkQv6Juy8eme2AH9Q5SwKYWkeEzS20_7CnHAQen3_I6DsSvw0STRXju9vg/exec"
 };
 
 let dictionaryData = [];
@@ -10,16 +10,13 @@ let lastFilterResults = [];
 // --- INITIALIZATION ---
 async function init() {
     const status = document.getElementById('statusMessage');
-    status.textContent = "🔄 Loading Bodo Dictionary from GitHub...";
-
     try {
-        // Fetch the local JSON file
         const response = await fetch(CONFIG.db);
-        if (!response.ok) throw new Error("File not found");
+        if (!response.ok) throw new Error("JSON file not found");
         
         const data = await response.json();
         
-        // Map the JSON keys to internal variables
+        // Map JSON keys (Supporting both CSV-to-JSON and Manual formats)
         dictionaryData = data.map(item => ({
             english: item["English Word"] || item.english,
             translation: item["Bodo Meaning"] || item.translation,
@@ -27,7 +24,7 @@ async function init() {
             extra: item["Transliteration"] || item.extra
         }));
 
-        // Grouping logic (handles multiple meanings for one word)
+        // Grouping logic for multiple meanings
         groupedDictionaryData = {};
         dictionaryData.forEach(item => {
             const key = item.english;
@@ -35,14 +32,14 @@ async function init() {
             groupedDictionaryData[key].push(item);
         });
 
-        status.textContent = `✅ Loaded ${dictionaryData.length} words!`;
+        status.textContent = `✅ ${dictionaryData.length} Words Loaded`;
     } catch (e) {
-        status.textContent = "⚠️ Load Error. Check if JSON file exists.";
-        console.error("Fetch error:", e);
+        status.textContent = "⚠️ Error loading JSON data.";
+        console.error(e);
     }
 }
 
-// --- SEARCH & RENDER LOGIC ---
+// --- SEARCH LOGIC ---
 function filterData(query) {
     const q = query.toLowerCase().trim();
     const container = document.getElementById('bookTableContainer');
@@ -69,8 +66,13 @@ function renderTable(matchingKeys) {
     matchingKeys.forEach(word => {
         const row = tbody.insertRow();
         row.onclick = () => showDetails(word);
-        row.insertCell().textContent = word;
-        row.insertCell().textContent = groupedDictionaryData[word].map(i => i.translation).join(", ");
+        
+        const cellEng = row.insertCell();
+        cellEng.innerHTML = `<span class="word-primary">${word}</span>`;
+        
+        const cellTr = row.insertCell();
+        const meanings = groupedDictionaryData[word].map(i => i.translation).join(", ");
+        cellTr.innerHTML = `<span class="word-muted">${meanings}</span>`;
     });
 }
 
@@ -80,12 +82,13 @@ function showDetails(word) {
     let html = '';
     entries.forEach(e => {
         html += `
-            <div class="detail-item">
-                <p class="meaning-text">${e.translation} 
-                    <button onclick="navigator.clipboard.writeText('${e.translation}')" class="copy-btn-mini">📋</button>
-                </p>
-                ${e.extra ? `<p class="extra-text"><em>${e.extra}</em></p>` : ''}
-                ${e.explanation ? `<p class="explanation-box">${e.explanation}</p>` : ''}
+            <div class="meaning-row">
+                <div class="meaning-header">
+                    <span class="bodo-text">${e.translation}</span>
+                    <button onclick="navigator.clipboard.writeText('${e.translation}')" class="copy-btn">📋</button>
+                </div>
+                ${e.extra ? `<span class="translit-tag">${e.extra}</span>` : ''}
+                ${e.explanation ? `<div class="explanation-box">${e.explanation}</div>` : ''}
             </div>`;
     });
     document.getElementById('definitionText').innerHTML = html;
@@ -93,11 +96,16 @@ function showDetails(word) {
     document.getElementById('descriptionArea').style.display = 'block';
 }
 
-// --- LISTENERS ---
+// --- ADMIN & THEME HANDLERS ---
 document.getElementById('searchInput').oninput = (e) => filterData(e.target.value);
 document.getElementById('backButton').onclick = () => {
     document.getElementById('descriptionArea').style.display = 'none';
     renderTable(lastFilterResults);
+};
+document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-theme');
+document.getElementById('adminLoginBtn').onclick = () => {
+    const p = document.getElementById('adminPanel');
+    p.style.display = p.style.display === 'none' ? 'block' : 'none';
 };
 
 init();
