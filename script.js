@@ -1,6 +1,5 @@
 const CONFIG = {
-    db: "bodo_dictionary.json", // Ensure this file is in the same folder
-    api: "https://script.google.com/macros/s/AKfycbxPo_6gATFfSkQv6Juy8eme2AH9Q5SwKYWkeEzS20_7CnHAQen3_I6DsSvw0STRXju9vg/exec"
+    db: "https://raw.githubusercontent.com/babitaboro/babitaboro_bododictionary.json",
 };
 
 let dictionaryData = [];
