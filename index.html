@@ -12,58 +12,29 @@
         <header>
             <h1>Bodo Dictionary</h1>
             <div id="searchArea">
-                <input type="text" id="searchInput" placeholder="Search English or Bodo word...">
+                <input type="text" id="searchInput" placeholder="Search word...">
             </div>
         </header>
 
         <div class="btn-group">
             <button id="themeToggle" class="theme-button">🌓 Mode</button>
-            <button id="adminLoginBtn" class="theme-button admin-btn">🔐 Admin</button>
             <button id="contactButton" class="theme-button">📧 Contact</button>
         </div>
 
-        <p id="statusMessage" class="status-info">Connecting to GitHub...</p>
-
-        <div id="adminPanel" class="description-box" style="display:none;">
-            <h3>🛠 Admin Access</h3>
-            <div id="loginForm">
-                <input type="text" id="adminUser" placeholder="Username">
-                <input type="password" id="adminPass" placeholder="Password">
-                <button onclick="performLogin()" class="action-btn">Login</button>
-            </div>
-            <div id="entryForm" style="display:none;">
-                <input type="text" id="newEnglish" placeholder="English Word">
-                <input type="text" id="newTranslation" placeholder="Bodo Meaning">
-                <input type="text" id="newExtra" placeholder="Transliteration">
-                <textarea id="newExpl" placeholder="Bodo Explanation"></textarea>
-                <button onclick="saveNewWord()" class="action-btn save">Save to Sheet</button>
-            </div>
-        </div>
+        <p id="statusMessage" class="status-info">Ready</p>
 
         <div id="bookTableContainer" style="display:none;">
             <table id="bookTable">
-                <tbody id="bookTableBody">
-                    </tbody>
+                <tbody id="bookTableBody"></tbody>
             </table>
         </div>
 
         <div id="descriptionArea" class="description-box" style="display:none;">
-            <h2 id="descriptionTitle">Word</h2>
-            <div id="definitionText">
-                </div>
-            <button id="backButton" class="action-btn">← Back to Results</button>
-        </div>
-
-        <div id="contactArea" class="description-box" style="display:none;">
-            <h3>📬 Contact Support</h3>
-            <p>For corrections or suggestions, reach out via:</p>
-            <div class="btn-group">
-                <a href="mailto:yaduk883@gmail.com" class="theme-button" style="text-decoration: none;">📧 Email</a>
-                <a href="https://github.com/babitaboro" target="_blank" class="theme-button" style="text-decoration: none;">🐙 GitHub</a>
-            </div>
+            <h2 id="descriptionTitle"></h2>
+            <div id="definitionText"></div>
+            <button id="backButton" class="action-btn">← Back to Search</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
