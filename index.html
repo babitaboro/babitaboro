@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📖 Bodo Dictionary</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📖 Bodo Dictionary</h1>
+        
+        <div class="controls-bar">
+            <div class="lang-indicator">English - Bodo</div>
+            <button onclick="init()" class="theme-button refresh-btn">🔄 Refresh</button>
+            <button id="adminLoginBtn" class="theme-button admin-btn">🔑 Admin</button>
+            <button id="themeToggle" class="theme-button">☀️ Theme</button>
+            <button id="contactButton" class="contact-button">📞 Contact</button>
+        </div>
+        
+        <div id="searchArea">
+            <input type="text" id="searchInput" placeholder="🔍 Search English or Bodo word...">
+        </div>
+
+        <p id="statusMessage" class="info">Ready!</p>
+
+        <div id="adminPanel" class="description-box" style="display:none;">
+            <h3 id="adminPanelTitle">🛠 Admin Access</h3>
+            <div id="loginForm">
+                <input type="text" id="adminUser" placeholder="Username">
+                <input type="password" id="adminPass" placeholder="Password">
+                <button onclick="performLogin()" class="save-btn">Login</button>
+            </div>
+            <div id="entryForm" style="display:none;">
+                <input type="text" id="newEnglish" placeholder="English Word">
+                <input type="text" id="newTranslation" placeholder="Bodo Meaning">
+                <input type="text" id="newExtra" placeholder="Transliteration">
+                <textarea id="newExpl" placeholder="Bodo Explanation" style="width: 100%; height: 60px; margin-bottom: 10px;"></textarea>
+                <button onclick="saveNewWord()" class="save-btn">Save to Sheet</button>
+            </div>
+            <button onclick="logout()" class="back-button" style="background:#666; margin-top:10px; width:100%;">Close / Logout</button>
+        </div>
+
+        <div id="contactArea" class="description-box" style="display:none;">
+            <h3>📬 Contact</h3>
+            <div class="contact-links">
+                <a href="mailto:yaduk883@gmail.com" class="contact-link-button email-button">📧 Email</a>
+                <a href="https://github.com/yaduk883" target="_blank" class="contact-link-button github-button">🐙 GitHub</a>
+            </div>
+        </div>
+
+        <div id="descriptionArea" class="description-box" style="display:none;">
+            <h3 id="descriptionTitle"></h3>
+            <div id="definitionText"></div>
+            <button id="backButton" class="back-button">← Back to Results</button>
+        </div>
+
+        <div id="bookTableContainer" style="display:none;">
+            <table id="bookTable">
+                <thead>
+                    <tr>
+                        <th>English Word</th>
+                        <th>Bodo Translation</th>
+                    </tr>
+                </thead>
+                <tbody id="bookTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
