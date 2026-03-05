@@ -1,6 +1,6 @@
 const CONFIG = {
-    // Relative path to your JSON file in the GitHub repo
-    db: "bodo_dictionary.json"
+    // UPDATED: Points directly to your raw JSON data on GitHub
+    db: "https://raw.githubusercontent.com/babitaboro/babitaboro/main/bodo_dictionary.json"
 };
 
 let dictionaryData = [];
@@ -10,16 +10,17 @@ let lastFilterResults = [];
 // --- INITIALIZATION ---
 async function init() {
     const status = document.getElementById('statusMessage');
-    status.textContent = "🔄 Loading Bodo Dictionary from GitHub...";
+    status.textContent = "🔄 Syncing Bodo Dictionary from GitHub...";
 
     try {
-        // Fetch the local JSON file
-        const response = await fetch(CONFIG.db);
-        if (!response.ok) throw new Error("File not found");
+        // We add '?t=' + time to force the browser to get the newest version of your file
+        const response = await fetch(CONFIG.db + '?t=' + new Date().getTime());
         
+        if (!response.ok) throw new Error("GitHub file not found");
+
         const data = await response.json();
         
-        // Map the JSON keys to internal variables
+        // Map the JSON keys (handles both 'English Word' from Excel and 'english' from JSON)
         dictionaryData = data.map(item => ({
             english: item["English Word"] || item.english,
             translation: item["Bodo Meaning"] || item.translation,
@@ -35,9 +36,9 @@ async function init() {
             groupedDictionaryData[key].push(item);
         });
 
-        status.textContent = `✅ Loaded ${dictionaryData.length} words!`;
+        status.textContent = `✅ Loaded ${dictionaryData.length} Bodo words!`;
     } catch (e) {
-        status.textContent = "⚠️ Load Error. Check if JSON file exists.";
+        status.textContent = "⚠️ Sync Error. Please check your connection.";
         console.error("Fetch error:", e);
     }
 }
@@ -46,7 +47,11 @@ async function init() {
 function filterData(query) {
     const q = query.toLowerCase().trim();
     const container = document.getElementById('bookTableContainer');
-    if (!q) { container.style.display = 'none'; return; }
+    
+    if (!q) { 
+        if (container) container.style.display = 'none'; 
+        return; 
+    }
 
     const allWords = Object.keys(groupedDictionaryData);
     const matches = allWords.filter(word => 
@@ -60,17 +65,28 @@ function filterData(query) {
 function renderTable(matchingKeys) {
     const container = document.getElementById('bookTableContainer');
     const tbody = document.getElementById('bookTableBody');
+    if (!tbody) return;
+
     tbody.innerHTML = ''; 
     lastFilterResults = matchingKeys;
 
-    if (matchingKeys.length === 0) { container.style.display = 'none'; return; }
+    if (matchingKeys.length === 0) { 
+        container.style.display = 'none'; 
+        return; 
+    }
+
     container.style.display = 'block';
 
     matchingKeys.forEach(word => {
         const row = tbody.insertRow();
         row.onclick = () => showDetails(word);
-        row.insertCell().textContent = word;
-        row.insertCell().textContent = groupedDictionaryData[word].map(i => i.translation).join(", ");
+        
+        const cellEng = row.insertCell();
+        cellEng.innerHTML = `<strong>${word}</strong>`;
+        
+        const cellTr = row.insertCell();
+        const meanings = groupedDictionaryData[word].map(i => i.translation).join(", ");
+        cellTr.textContent = meanings;
     });
 }
 
@@ -78,26 +94,42 @@ function showDetails(word) {
     document.getElementById('bookTableContainer').style.display = 'none';
     const entries = groupedDictionaryData[word];
     let html = '';
+    
     entries.forEach(e => {
         html += `
-            <div class="detail-item">
-                <p class="meaning-text">${e.translation} 
+            <div class="meaning-row" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">
+                <p style="font-size: 1.4rem; color: var(--primary-color); font-weight: 800; margin: 0;">
+                    ${e.translation}
                     <button onclick="navigator.clipboard.writeText('${e.translation}')" class="copy-btn-mini">📋</button>
                 </p>
-                ${e.extra ? `<p class="extra-text"><em>${e.extra}</em></p>` : ''}
-                ${e.explanation ? `<p class="explanation-box">${e.explanation}</p>` : ''}
+                ${e.extra ? `<p style="color: #64748b; font-size: 0.9rem; margin: 5px 0;"><em>${e.extra}</em></p>` : ''}
+                ${e.explanation ? `<div class="explanation-box" style="background: rgba(0,0,0,0.03); padding: 12px; border-radius: 8px; border-left: 4px solid var(--primary-color); margin-top: 10px;">${e.explanation}</div>` : ''}
             </div>`;
     });
+    
     document.getElementById('definitionText').innerHTML = html;
     document.getElementById('descriptionTitle').textContent = word;
     document.getElementById('descriptionArea').style.display = 'block';
 }
 
-// --- LISTENERS ---
-document.getElementById('searchInput').oninput = (e) => filterData(e.target.value);
-document.getElementById('backButton').onclick = () => {
-    document.getElementById('descriptionArea').style.display = 'none';
-    renderTable(lastFilterResults);
-};
+// --- EVENT LISTENERS ---
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.oninput = (e) => filterData(e.target.value);
+}
 
+const backButton = document.getElementById('backButton');
+if (backButton) {
+    backButton.onclick = () => {
+        document.getElementById('descriptionArea').style.display = 'none';
+        renderTable(lastFilterResults);
+    };
+}
+
+const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.onclick = () => document.body.classList.toggle('dark-theme');
+}
+
+// Start the app
 init();
