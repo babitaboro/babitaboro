@@ -66,15 +66,7 @@ function filterData(query) {
         groupedDictionaryData[word].some(item => item.translation.toLowerCase().includes(q))
     );
 
-    matches.sort((a, b) => {
-        const aLow = a.toLowerCase();
-        const bLow = b.toLowerCase();
-        if (aLow === q && bLow !== q) return -1;
-        if (bLow === q && aLow !== q) return 1;
-        if (aLow.startsWith(q) && !bLow.startsWith(q)) return -1;
-        return aLow.localeCompare(bLow);
-    });
-
+    matches.sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
     renderTable(matches);
 }
 
@@ -99,12 +91,11 @@ function renderTable(matchingKeys) {
         row.onclick = () => showDetails(word);
         
         const cellEng = row.insertCell();
-        cellEng.textContent = word;
-        cellEng.style.fontWeight = "bold";
+        cellEng.innerHTML = `<strong>${word}</strong>`; // English in Bold
 
         const cellTr = row.insertCell();
-        const allMeanings = groupedDictionaryData[word].map(item => item.translation);
-        cellTr.textContent = allMeanings.join(", ");
+        const firstMeaning = groupedDictionaryData[word][0].translation;
+        cellTr.innerHTML = `<strong>${firstMeaning}</strong>`; // Bodo in Bold
     });
 }
 
@@ -116,12 +107,12 @@ function showDetails(word) {
     entries.forEach(e => {
         html += `
             <div class="detail-item">
-                <p style="font-size: 1.25rem; margin:0; font-weight: 600; color: var(--primary-color);">
+                <p style="font-size: 1.25rem; margin:0; font-weight: 800; color: var(--primary-color);">
                     ${e.translation} 
                     <button onclick="navigator.clipboard.writeText('${e.translation}')" class="copy-btn-mini">📋</button>
                 </p>
-                ${e.extra ? `<p style="font-size: 0.85rem; color: #777; margin: 4px 0;"><em>Transliteration: ${e.extra}</em></p>` : ''}
-                ${e.explanation ? `<p class="explanation-box"><strong>Explanation:</strong> ${e.explanation}</p>` : ''}
+                ${e.extra ? `<p style="font-size: 0.85rem; color: #777; margin: 4px 0;"><em>${e.extra}</em></p>` : ''}
+                ${e.explanation ? `<p style="font-size: 0.8rem; color: #555; margin-top: 10px; line-height: 1.4;">${e.explanation}</p>` : ''}
             </div>
         `;
     });
@@ -130,15 +121,12 @@ function showDetails(word) {
     document.getElementById('descriptionArea').style.display = 'block';
 }
 
-// --- ADMIN PANEL ---
+// --- ADMIN & EVENTS ---
 async function performLogin() {
     const user = document.getElementById('adminUser').value;
     const pass = document.getElementById('adminPass').value;
     try {
-        const resp = await fetch(CONFIG.api, { 
-            method: "POST", 
-            body: JSON.stringify({ action: "login", user, pass }) 
-        });
+        const resp = await fetch(CONFIG.api, { method: "POST", body: JSON.stringify({ action: "login", user, pass }) });
         const res = await resp.json();
         if(res.success) {
             document.getElementById('loginForm').style.display = 'none';
@@ -152,14 +140,9 @@ async function saveNewWord() {
     const meaning = document.getElementById('newTranslation').value;
     const extra = document.getElementById('newExtra').value;
     const expl = document.getElementById('newExpl').value;
-    
     try {
-        const resp = await fetch(CONFIG.api, { 
-            method: "POST", 
-            body: JSON.stringify({ action: "add", from, meaning, extra, expl }) 
-        });
-        alert("Saved successfully!");
-        init(); 
+        await fetch(CONFIG.api, { method: "POST", body: JSON.stringify({ action: "add", from, meaning, extra, expl }) });
+        alert("Saved!"); init();
     } catch(e) { alert("Save failed"); }
 }
 
@@ -169,12 +152,8 @@ function logout() {
     document.getElementById('entryForm').style.display = 'none';
 }
 
-// --- LISTENERS ---
 document.getElementById('searchInput').oninput = (e) => filterData(e.target.value);
-document.getElementById('backButton').onclick = () => { 
-    document.getElementById('descriptionArea').style.display='none'; 
-    renderTable(lastFilterResults); 
-};
+document.getElementById('backButton').onclick = () => { document.getElementById('descriptionArea').style.display='none'; renderTable(lastFilterResults); };
 document.getElementById('themeToggle').onclick = () => document.body.classList.toggle('dark-theme');
 document.getElementById('adminLoginBtn').onclick = () => { 
     const p = document.getElementById('adminPanel');
