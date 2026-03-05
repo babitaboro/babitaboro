@@ -1,7 +1,7 @@
 const CONFIG = {
     BODO: {
         db: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQLtdSVACMT2lwL9zKyOMuhrFiIpzKrZSjR0leijaTbBV5akRBlQCNwa8zVRxqvqA/pub?output=csv",
-        api: "https://script.google.com/macros/s/AKfycbxPo_6gATFfSkQv6Juy8eme2AH9Q5SwKYWkeEzS20_7CnHAQen3_I6DsSvw0STRXju9vg/exec"
+        api: "https://script.google.com/macros/s/AKfycbxqty3-JEhkJwLxQmGhykF1I7j7kDgVZzE4f-Rr2ynGPS9ZJY6M_CpjRqvcw1ukkCHkAw/exec"
 };
 
 let dictionaryData = [];
