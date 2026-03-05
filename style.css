@@ -1,6 +1,3 @@
-/* =========================================
-   1. CORE THEME & VARIABLES
-   ========================================= */
 :root {
     --primary-color: #2563eb;
     --background-color: #f8fafc;
@@ -8,8 +5,6 @@
     --text-color: #1e293b;
     --text-muted: #64748b;
     --border-color: #e2e8f0;
-    --input-focus: #3b82f6;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
 }
 
 body.dark-theme {
@@ -18,239 +13,64 @@ body.dark-theme {
     --text-color: #f1f5f9;
     --text-muted: #94a3b8;
     --border-color: #334155;
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
 }
 
-/* =========================================
-   2. MAIN LAYOUT
-   ========================================= */
 body { 
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    font-family: 'Inter', system-ui, -apple-system, sans-serif; 
     margin: 0; padding: 15px; 
     background-color: var(--background-color); 
     color: var(--text-color); 
-    line-height: 1.5;
-    transition: background 0.3s, color 0.3s; 
+    transition: 0.3s; 
 }
 
-.container { 
-    max-width: 650px; 
-    margin: 0 auto; 
-}
+.container { max-width: 600px; margin: 0 auto; }
 
-h1 { 
-    text-align: center; 
-    color: var(--primary-color); 
-    font-weight: 800;
-    margin-bottom: 20px;
-}
-
-/* =========================================
-   3. CONTROLS & BUTTONS
-   ========================================= */
-.controls-bar { 
-    display: flex; 
-    gap: 8px; 
-    margin-bottom: 20px; 
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-.theme-button, .contact-button, .save-btn, .back-button, .refresh-btn {
-    padding: 10px 16px; 
-    border-radius: 10px; 
-    border: 1px solid var(--border-color);
-    background: var(--card-background); 
-    color: var(--text-color); 
-    cursor: pointer; 
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-    box-shadow: var(--shadow);
-}
-
-.theme-button:hover, .contact-button:hover {
-    background: var(--primary-color);
-    color: white;
-}
-
-.lang-indicator {
-    padding: 10px;
-    font-weight: 700;
-    color: var(--primary-color);
-}
-
-/* =========================================
-   4. SEARCH AREA
-   ========================================= */
-#searchArea { margin-bottom: 10px; }
+h1 { text-align: center; color: var(--primary-color); font-weight: 800; }
 
 #searchInput {
-    width: 100%; 
-    padding: 16px; 
-    border-radius: 15px; 
-    border: 2px solid var(--border-color);
-    background: var(--card-background);
-    color: var(--text-color);
-    font-size: 1.1rem; 
-    box-sizing: border-box;
-    transition: border-color 0.2s;
+    width: 100%; padding: 15px; border-radius: 12px; border: 2px solid var(--border-color);
+    background: var(--card-background); color: var(--text-color); font-size: 1rem; margin-bottom: 20px;
 }
 
-#searchInput:focus {
-    outline: none;
-    border-color: var(--input-focus);
-}
+/* TABLE STYLING */
+#bookTable { width: 100%; border-collapse: collapse; background: var(--card-background); border-radius: 10px; overflow: hidden; }
+#bookTable td { padding: 15px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
 
-.info { 
-    text-align: center; 
-    font-size: 0.9rem; 
-    color: var(--text-muted); 
-    margin-bottom: 15px;
-}
-
-/* =========================================
-   5. DATA TABLE (SEARCH RESULTS)
-   ========================================= */
-#bookTableContainer {
-    margin-top: 10px;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-}
-
-#bookTable { 
-    width: 100%; 
-    border-collapse: collapse; 
-    background: var(--card-background); 
-}
-
-#bookTable th { 
-    background: var(--primary-color); 
-    color: #ffffff; 
-    padding: 15px; 
-    text-align: left;
-    font-weight: 700;
-}
-
-#bookTable td { 
-    padding: 15px; 
-    border-bottom: 1px solid var(--border-color); 
-    cursor: pointer; 
-}
-
-#bookTable tr:last-child td { border-bottom: none; }
-
-#bookTable tr:hover {
-    background-color: rgba(37, 99, 235, 0.05);
-}
-
-/* Specific Bold Formatting for Table */
-#bookTable td strong {
+/* REQUISITION: BOLD ENGLISH & BODO */
+strong {
     font-weight: 800; /* Extra Bold */
-    display: block;
-}
-
-/* =========================================
-   6. DETAIL VIEW (MEANING BOX)
-   ========================================= */
-.description-box {
-    background: var(--card-background); 
-    padding: 25px; 
-    border-radius: 20px;
-    border: 1px solid var(--border-color); 
-    margin-bottom: 20px;
-    box-shadow: var(--shadow);
-}
-
-.detail-item {
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.detail-item:last-child { border-bottom: none; }
-
-/* Bold Meaning Text */
-.bodo-header {
-    font-weight: 800;
-    font-size: 1.4rem;
-    color: var(--primary-color);
-    margin: 0;
-}
-
-/* Small Explanation Text */
-.explanation-text {
-    font-size: 0.85rem; /* Small font as requested */
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-top: 10px;
-    display: block;
-    background: rgba(0,0,0,0.02);
-    padding: 10px;
-    border-radius: 8px;
-}
-
-body.dark-theme .explanation-text {
-    background: rgba(255,255,255,0.05);
-}
-
-/* =========================================
-   7. ADMIN PANEL & CONTACT
-   ========================================= */
-#adminPanel h3, #contactArea h3 {
-    margin-top: 0;
-    color: var(--primary-color);
-}
-
-#adminPanel input, #adminPanel textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    background: var(--background-color);
     color: var(--text-color);
-    box-sizing: border-box;
 }
 
-.save-btn {
-    width: 100%;
-    background: var(--primary-color);
-    color: white;
-    border: none;
+#bookTable td strong {
+    font-size: 1.05rem;
 }
 
-.save-btn:hover {
-    background: #1d4ed8;
-}
-
-.contact-links {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 15px;
-}
-
-.contact-link-button {
-    text-decoration: none;
-    padding: 10px 20px;
+/* REQUISITION: SMALL EXPLANATION */
+.small-explanation {
+    font-size: 0.82rem; /* Significantly smaller */
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-top: 8px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.03);
     border-radius: 8px;
-    font-weight: 600;
-    color: white;
+    border-left: 3px solid var(--primary-color);
 }
 
-.email-button { background: #ea4335; }
-.github-button { background: #333; }
+body.dark-theme .small-explanation {
+    background: rgba(255, 255, 255, 0.05);
+}
 
-/* =========================================
-   8. UTILITIES
-   ========================================= */
-.copy-btn-mini {
-    background: none;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    cursor: pointer;
-    padding: 2px 6px;
-    font-size: 0.8rem;
-    margin-left: 10px;
+/* UI ELEMENTS */
+.description-box {
+    background: var(--card-background); padding: 20px; border-radius: 15px;
+    border: 1px solid var(--border-color); margin-bottom: 20px;
+}
+
+.copy-btn-mini { background: none; border: 1px solid #ccc; border-radius: 4px; cursor: pointer; padding: 2px 5px; }
+
+.theme-button, .back-button {
+    padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border-color);
+    background: var(--card-background); color: var(--text-color); cursor: pointer;
 }
